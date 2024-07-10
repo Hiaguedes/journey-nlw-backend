@@ -4,6 +4,7 @@ import { createTrips } from "./routes/create-trip";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import { confirmTrip } from "./routes/confirm-trip";
 import fastifyCors from "@fastify/cors";
+import { confirmParticipant } from "./routes/confirm-participant";
 
 const app = fastify();
 
@@ -15,6 +16,7 @@ app.register(fastifyCors, {
 })
 app.register(createTrips)
 app.register(confirmTrip)
+app.register(confirmParticipant)
 
 app.get('/hello', () => {
     return {

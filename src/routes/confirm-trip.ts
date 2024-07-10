@@ -30,15 +30,15 @@ export const confirmTrip = async (app: FastifyInstance) => {
             }
         })
 
-        if(!trip) throw new Error('trip not found on confirm trip route');
-        if(trip.is_confirmed) return reply.redirect(`http://localhost:4000/trips/${tripId}`);
+        if (!trip) throw new Error('trip not found on confirm trip route');
+        if (trip.is_confirmed) return reply.redirect(`http://localhost:4000/trips/${tripId}`);
 
         await prisma.trip.update({
             where: { id: tripId },
             data: { is_confirmed: true }
         })
 
-        
+
         const formattedStartDate = dayJsHelper(trip.starts_at).format('D [de] MMMM [de] YYYY')
         const formattedEndDate = dayJsHelper(trip.ends_at).format('D [de] MMMM [de] YYYY')
 
@@ -46,7 +46,7 @@ export const confirmTrip = async (app: FastifyInstance) => {
 
         await Promise.all(
             trip.participants.map(async (participant) => {
-                const confirmationLink = `http://localhost:4000/trips/${trip.id}/confirm/${participant.id}`
+                const confirmationLink = `http://localhost:4000/participants/${participant.id}/confirm`
 
                 const message = await mail.sendMail({
                     from: {
