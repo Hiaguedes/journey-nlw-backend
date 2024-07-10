@@ -3,8 +3,8 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import z from "zod";
 import { prisma } from "../lib/prisma";
 
-export const getLinks = async (app: FastifyInstance) => {
-    app.withTypeProvider<ZodTypeProvider>().get('/trips/:tripId/links', {
+export const getParticipants = async (app: FastifyInstance) => {
+    app.withTypeProvider<ZodTypeProvider>().get('/trips/:tripId/participants', {
         schema: {
             params: z.object({
                 tripId: z.string().uuid(),
@@ -18,16 +18,21 @@ export const getLinks = async (app: FastifyInstance) => {
                 id: tripId,
             },
             include: {
-                links: true
-            }
-        })
+                participants: {
+                    select: {
+                        id: true,
+                        name: true,
+                        is_confirmed: true,
+                        email: true,
+                    }
+                }
+        }})
 
         if(!trip) throw new Error('trip not founded on create activity route');
 
         
-
         return {
-            links: trip.links
+            participants: trip.participants
         }
     })
 }
