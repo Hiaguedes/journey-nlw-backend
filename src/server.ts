@@ -13,6 +13,7 @@ import { getParticipants } from "./routes/get-participants";
 import { createInvite } from "./routes/create-invite";
 import { updateTrip } from "./routes/update-trip";
 import { getTripDetails } from "./routes/get-trip-details";
+import { getOneParticipant } from "./routes/get-one-participant";
 
 const app = fastify();
 
@@ -33,6 +34,7 @@ app.register(getParticipants)
 app.register(createInvite)
 app.register(updateTrip)
 app.register(getTripDetails)
+app.register(getOneParticipant)
 
 app.get('/hello', () => {
     return {
