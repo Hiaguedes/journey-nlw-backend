@@ -90,7 +90,6 @@ export const createTrips = async (app: FastifyInstance) => {
 
         return {
             message: `trip created with id ${trip.id}`,
-
         }
     })
 }
