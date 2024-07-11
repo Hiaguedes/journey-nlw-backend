@@ -5,6 +5,7 @@ import { prisma } from "../lib/prisma";
 import { dayJsHelper } from "../lib/dayJsHelper";
 import getMailClient from "../lib/mail";
 import nodemailer from 'nodemailer'
+import { ClientError } from "../errors/client-error";
 
 export const confirmTrip = async (app: FastifyInstance) => {
     app.withTypeProvider<ZodTypeProvider>().get('/trips/:tripId/confirm', { // tem que ser get pro usario receber o email
@@ -30,7 +31,7 @@ export const confirmTrip = async (app: FastifyInstance) => {
             }
         })
 
-        if (!trip) throw new Error('trip not found on confirm trip route');
+        if (!trip) throw new ClientError('trip not found on confirm trip route');
         if (trip.is_confirmed) return reply.redirect(`http://localhost:4000/trips/${tripId}`);
 
         await prisma.trip.update({

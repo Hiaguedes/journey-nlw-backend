@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { prisma } from "../lib/prisma";
 import "dayjs/locale/pt-br"
 import dayjs from "dayjs";
+import { ClientError } from "../errors/client-error";
 
 dayjs.locale('pt-br')
 
@@ -29,7 +30,7 @@ export const getTripDetails = async (app: FastifyInstance) => {
             }
         })
 
-        if (!trip) throw new Error('Trip not found on get trip details route')
+        if (!trip) throw new ClientError('Trip not found on get trip details route')
 
         return {
             trip,

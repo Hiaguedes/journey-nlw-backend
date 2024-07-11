@@ -6,6 +6,7 @@ import "dayjs/locale/pt-br"
 import dayjs from "dayjs";
 import getMailClient from "../lib/mail";
 import nodemailer from 'nodemailer'
+import { ClientError } from "../errors/client-error";
 
 dayjs.locale('pt-br')
 
@@ -13,7 +14,7 @@ export const createTrips = async (app: FastifyInstance) => {
     app.withTypeProvider<ZodTypeProvider>().post('/trips', {
         schema: {
             body: z.object({
-                destination: z.string().min(4),
+                destination: z.string({ required_error: 'Destination is required' }).min(4),
                 starts_at: z.coerce.date(), // uma data que de pra converter pra Date
                 ends_at: z.coerce.date(),
                 owner_name: z.string(),
@@ -25,11 +26,11 @@ export const createTrips = async (app: FastifyInstance) => {
         const { destination, ends_at, starts_at, owner_email, owner_name, emails_to_invite } = request.body;
 
         if (dayjs(ends_at).isBefore(dayjs(starts_at))) {
-            throw new Error('Invalid trip start date - end date is before start date');
+            throw new ClientError('Invalid trip start date - end date is before start date');
         }
 
         if (dayjs(starts_at).isBefore(dayjs())) {
-            throw new Error('Invalid trip start date - start is before today');
+            throw new ClientError('Invalid trip start date - start is before today');
         }
 
         const trip = await prisma.trip.create({

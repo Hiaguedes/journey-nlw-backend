@@ -14,6 +14,7 @@ import { createInvite } from "./routes/create-invite";
 import { updateTrip } from "./routes/update-trip";
 import { getTripDetails } from "./routes/get-trip-details";
 import { getOneParticipant } from "./routes/get-one-participant";
+import { errorHandler } from "./error-handler";
 
 const app = fastify();
 
@@ -23,6 +24,9 @@ app.setSerializerCompiler(serializerCompiler);
 app.register(fastifyCors, {
     origin: 'http//localhost:4000'
 })
+
+app.setErrorHandler(errorHandler)
+
 app.register(createTrips)
 app.register(confirmTrip)
 app.register(confirmParticipant)
