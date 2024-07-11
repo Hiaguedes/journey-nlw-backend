@@ -15,6 +15,7 @@ import { updateTrip } from "./routes/update-trip";
 import { getTripDetails } from "./routes/get-trip-details";
 import { getOneParticipant } from "./routes/get-one-participant";
 import { errorHandler } from "./error-handler";
+import { env } from "./env";
 
 const app = fastify();
 
@@ -22,7 +23,7 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 app.register(fastifyCors, {
-    origin: 'http//localhost:4000'
+    origin: env.API_BASE_URL
 })
 
 app.setErrorHandler(errorHandler)
@@ -67,6 +68,6 @@ app.get('/cadastrar', async () => {
     }
 })
 
-app.listen({ port: 4000 }).then(() => {
+app.listen({ port: env.PORT }).then(() => {
     console.log('server running')
 })

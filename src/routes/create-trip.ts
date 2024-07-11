@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import getMailClient from "../lib/mail";
 import nodemailer from 'nodemailer'
 import { ClientError } from "../errors/client-error";
+import { env } from "../env";
 
 dayjs.locale('pt-br')
 
@@ -58,7 +59,7 @@ export const createTrips = async (app: FastifyInstance) => {
 
         const formattedStartDate = dayjs(starts_at).format('D [de] MMMM [de] YYYY')
         const formattedEndDate = dayjs(ends_at).format('D [de] MMMM [de] YYYY')
-        const confirmationLink = `http://localhost:4000/trips/${trip.id}/confirm`
+        const confirmationLink = `${env.API_BASE_URL}/trips/${trip.id}/confirm`
 
         const mail = await getMailClient();
 

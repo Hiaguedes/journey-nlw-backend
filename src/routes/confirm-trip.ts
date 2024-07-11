@@ -6,6 +6,7 @@ import { dayJsHelper } from "../lib/dayJsHelper";
 import getMailClient from "../lib/mail";
 import nodemailer from 'nodemailer'
 import { ClientError } from "../errors/client-error";
+import { env } from "../env";
 
 export const confirmTrip = async (app: FastifyInstance) => {
     app.withTypeProvider<ZodTypeProvider>().get('/trips/:tripId/confirm', { // tem que ser get pro usario receber o email
@@ -32,7 +33,7 @@ export const confirmTrip = async (app: FastifyInstance) => {
         })
 
         if (!trip) throw new ClientError('trip not found on confirm trip route');
-        if (trip.is_confirmed) return reply.redirect(`http://localhost:4000/trips/${tripId}`);
+        if (trip.is_confirmed) return reply.redirect(`${env.WEB_BASE_URL}/trips/${tripId}`);
 
         await prisma.trip.update({
             where: { id: tripId },
@@ -47,7 +48,7 @@ export const confirmTrip = async (app: FastifyInstance) => {
 
         await Promise.all(
             trip.participants.map(async (participant) => {
-                const confirmationLink = `http://localhost:4000/participants/${participant.id}/confirm`
+                const confirmationLink = `${env.API_BASE_URL}/participants/${participant.id}/confirm`
 
                 const message = await mail.sendMail({
                     from: {
@@ -76,6 +77,6 @@ export const confirmTrip = async (app: FastifyInstance) => {
         )
 
 
-        return reply.redirect((`http://localhost:4000/trips/${tripId}`))
+        return reply.redirect((`${env.WEB_BASE_URL}/trips/${tripId}`))
     })
 }
